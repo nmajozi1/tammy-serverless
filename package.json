@@ -1,0 +1,38 @@
+{
+  "name": "bored-serverless-functions",
+  "version": "1.0.0",
+  "description": "AWS functions for bored app. Which is a budget app.",
+  "main": "index.js",
+  "dependencies": {
+    "@types/async": "^3.0.8",
+    "@types/aws-lambda": "^8.10.44",
+    "@types/axios": "^0.14.0",
+    "@types/node": "^13.7.4",
+    "@types/request": "^2.48.4",
+    "@types/uuid": "^3.4.7",
+    "aws-sdk": "^2.622.0",
+    "axios": "^0.19.2",
+    "dotenv": "^10.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "needle": "^2.4.1",
+    "request": "^2.88.2",
+    "uuid": "^3.4.0"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^8.5.4",
+    "serverless-offline": "^6.9.0",
+    "typescript": "^3.8.3"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "deploy": "npm run build && sls deploy"
+  },
+  "keywords": [
+    "node",
+    "typescript",
+    "lambda"
+  ],
+  "author": "",
+  "license": "ISC"
+}

@@ -1,0 +1,63 @@
+org: ntokozomajozi5
+app: api-app
+service: tammy-serverless
+frameworkVersion: '2'
+
+plugins:
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: eu-west-1
+  lambdaHashingVersion: 20201221
+  iam: {
+    role: {
+      statements: [
+        {
+          "Effect": "Allow",
+          "Action": [
+            "lambda:InvokeFunction"
+          ],
+          "Resource": "*"
+        },
+        {
+          "Effect": "Allow",
+          "Action": [
+            "dynamodb:*"
+          ],
+          "Resource": "*"
+        },
+        {
+          "Effect": "Allow",
+          "Action": [
+            "s3:*"
+          ],
+          "Resource": "*"
+        }
+      ]
+    }
+  }
+
+environment:
+  REGION: ${param:REGION}
+  JWT_SECRET: ${param:JWT_SECRET}
+  DYNAMO_DB_USERS_TABLE: ${param:DYNAMO_DB_USERS_TABLE}
+
+functions:
+  validate: 
+    handler: dist/validate.validate
+  login:
+    handler: dist/login.login
+    events:
+      - http:
+          path: users/login
+          method: post
+          cors: true
+  addUser:
+    handler: dist/add.add
+    events:
+      - http:
+          path: users/add
+          method: post
+          cors: true

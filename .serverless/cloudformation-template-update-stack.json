@@ -71,6 +71,12 @@
         }
       }
     },
+    "ValidateLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/tammy-serverless-dev-validate"
+      }
+    },
     "LoginLogGroup": {
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
@@ -215,6 +221,12 @@
                   "Resource": [
                     {
                       "Fn::GetAtt": [
+                        "ValidateLogGroup",
+                        "Arn"
+                      ]
+                    },
+                    {
+                      "Fn::GetAtt": [
                         "LoginLogGroup",
                         "Arn"
                       ]
@@ -233,6 +245,31 @@
         ]
       }
     },
+    "ValidateLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/tammy-serverless/dev/1633883501713-2021-10-10T16:31:41.713Z/tammy-serverless.zip"
+        },
+        "Handler": "s_validate.handler",
+        "Runtime": "nodejs12.x",
+        "FunctionName": "tammy-serverless-dev-validate",
+        "MemorySize": 1024,
+        "Timeout": 6,
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "ValidateLogGroup"
+      ]
+    },
     "LoginLambdaFunction": {
       "Type": "AWS::Lambda::Function",
       "Properties": {
@@ -240,7 +277,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/tammy-serverless/dev/1628510970829-2021-08-09T12:09:30.829Z/tammy-serverless.zip"
+          "S3Key": "serverless/tammy-serverless/dev/1633883501713-2021-10-10T16:31:41.713Z/tammy-serverless.zip"
         },
         "Handler": "s_login.handler",
         "Runtime": "nodejs12.x",
@@ -265,7 +302,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/tammy-serverless/dev/1628510970829-2021-08-09T12:09:30.829Z/tammy-serverless.zip"
+          "S3Key": "serverless/tammy-serverless/dev/1633883501713-2021-10-10T16:31:41.713Z/tammy-serverless.zip"
         },
         "Handler": "s_addUser.handler",
         "Runtime": "nodejs12.x",
@@ -283,24 +320,34 @@
         "AddUserLogGroup"
       ]
     },
-    "LoginLambdaVersionp9eC5whqaCEu6GYOmMn4vW5OBQLKpkE5k9YbdcSByg": {
+    "ValidateLambdaVersionI7doGNF1b75KBZBge5WotX9jGL60wXzpZoHHTTVvw": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "ValidateLambdaFunction"
+        },
+        "CodeSha256": "hPQ8AB25z5tmGmhj4NtefE3zvvOF4ClWIff9Sn+Q4Ec="
+      }
+    },
+    "LoginLambdaVersionnOdtmeyUei9fdQanYfhnu8gCX5hcljH5vqrBcKDjSmw": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "LoginLambdaFunction"
         },
-        "CodeSha256": "mDPQslhbmxmrN88Ph4XxLPS2f7UvGbjrFG1u/P05aXw="
+        "CodeSha256": "hPQ8AB25z5tmGmhj4NtefE3zvvOF4ClWIff9Sn+Q4Ec="
       }
     },
-    "AddUserLambdaVersionqO2TTxsMtld0SPq7gtRnB5Ekul6yXnjQxqf9fvvESU": {
+    "AddUserLambdaVersionWr67XsY1g0bxiYb1oQIZdGVlksu0ekO7D7NVVGLxg": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "AddUserLambdaFunction"
         },
-        "CodeSha256": "mDPQslhbmxmrN88Ph4XxLPS2f7UvGbjrFG1u/P05aXw="
+        "CodeSha256": "hPQ8AB25z5tmGmhj4NtefE3zvvOF4ClWIff9Sn+Q4Ec="
       }
     },
     "ApiGatewayRestApi": {
@@ -386,7 +433,7 @@
                 "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,POST'"
               },
               "ResponseTemplates": {
-                "application/json": "#set($origin = $input.params(\"Origin\"))\n#if($origin == \"\") #set($origin = $input.params(\"origin\")) #end\n#if($origin.matches(\".+\")) #set($context.responseOverride.header.Access-Control-Allow-Origin = $origin) #end"
+                "application/json": ""
               }
             }
           ]
@@ -431,7 +478,7 @@
                 "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,POST'"
               },
               "ResponseTemplates": {
-                "application/json": "#set($origin = $input.params(\"Origin\"))\n#if($origin == \"\") #set($origin = $input.params(\"origin\")) #end\n#if($origin.matches(\".+\")) #set($context.responseOverride.header.Access-Control-Allow-Origin = $origin) #end"
+                "application/json": ""
               }
             }
           ]
@@ -536,7 +583,7 @@
         "AddUserLambdaPermissionApiGateway"
       ]
     },
-    "ApiGatewayDeployment1628510954193": {
+    "ApiGatewayDeployment1633883484060": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -734,7 +781,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/tammy-serverless/dev/1628510970829-2021-08-09T12:09:30.829Z/custom-resources.zip"
+          "S3Key": "serverless/tammy-serverless/dev/1633883501713-2021-10-10T16:31:41.713Z/custom-resources.zip"
         },
         "FunctionName": "tammy-serverless-dev-custom-resource-apigw-cw-role",
         "Handler": "apiGatewayCloudWatchRole/handler.handler",
@@ -751,6 +798,16 @@
       "DependsOn": [
         "IamRoleCustomResourcesLambdaExecution"
       ]
+    },
+    "CWLSubFilterValidateLogGroupEuWest1": {
+      "Type": "AWS::Logs::SubscriptionFilter",
+      "Properties": {
+        "DestinationArn": "arn:aws:logs:eu-west-1:802587217904:destination:rdJwr1sxsKTKvqWH91#j3FrRcsmvSSC38bZwT#tammy-serverless#dev",
+        "FilterPattern": "?\"REPORT RequestId: \" ?\"SERVERLESS_ENTERPRISE\"",
+        "LogGroupName": {
+          "Ref": "ValidateLogGroup"
+        }
+      }
     },
     "CWLSubFilterLoginLogGroupEuWest1": {
       "Type": "AWS::Logs::SubscriptionFilter",
@@ -803,10 +860,19 @@
         "Name": "sls-tammy-serverless-dev-EnterpriseLogAccessIamRole"
       }
     },
+    "ValidateLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "ValidateLambdaVersionI7doGNF1b75KBZBge5WotX9jGL60wXzpZoHHTTVvw"
+      },
+      "Export": {
+        "Name": "sls-tammy-serverless-dev-ValidateLambdaFunctionQualifiedArn"
+      }
+    },
     "LoginLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "LoginLambdaVersionp9eC5whqaCEu6GYOmMn4vW5OBQLKpkE5k9YbdcSByg"
+        "Ref": "LoginLambdaVersionnOdtmeyUei9fdQanYfhnu8gCX5hcljH5vqrBcKDjSmw"
       },
       "Export": {
         "Name": "sls-tammy-serverless-dev-LoginLambdaFunctionQualifiedArn"
@@ -815,7 +881,7 @@
     "AddUserLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "AddUserLambdaVersionqO2TTxsMtld0SPq7gtRnB5Ekul6yXnjQxqf9fvvESU"
+        "Ref": "AddUserLambdaVersionWr67XsY1g0bxiYb1oQIZdGVlksu0ekO7D7NVVGLxg"
       },
       "Export": {
         "Name": "sls-tammy-serverless-dev-AddUserLambdaFunctionQualifiedArn"
